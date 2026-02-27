@@ -1,0 +1,149 @@
+{% extends 'crops/base.html' %}
+
+{% block content %}
+
+<!-- HERO -->
+<section style="background: linear-gradient(135deg, #1b2b1e 0%, #2d6a4f 60%, #52b788 100%); padding: 5rem 0; position: relative; overflow: hidden;">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;opacity:0.05;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22><text y=%2240%22 font-size=%2240%22>🌾</text></svg>');background-size:80px 80px;"></div>
+    <div class="container" style="position:relative;">
+        <div style="max-width: 650px;">
+            <div style="background: rgba(244,162,97,0.2); display:inline-block; padding: 0.4rem 1rem; border-radius: 20px; color: #f4a261; font-weight: 700; font-size: 0.9rem; margin-bottom: 1.5rem; border: 1px solid rgba(244,162,97,0.3);">
+                🚀 Smart Farming for Better Profits
+            </div>
+            <h1 style="font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800; color: white; line-height: 1.15; margin-bottom: 1.5rem;">
+                Know When to<br><span style="color: #52b788;">Sell Your Crops</span><br>for Maximum Profit
+            </h1>
+            <p style="color: #b2dfdb; font-size: 1.2rem; margin-bottom: 2.5rem; line-height: 1.7;">
+                AI-powered price predictions, real-time market data, and weather-based sell recommendations — all in one place for Indian farmers.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="/predict/" class="btn btn-gold" style="font-size: 1.1rem; padding: 0.9rem 2rem;">📈 Predict Prices</a>
+                <a href="/prices/" class="btn btn-outline" style="font-size: 1.1rem; padding: 0.9rem 2rem; border-color: #52b788; color: #52b788;">View Live Prices</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS BAR -->
+<div style="background: white; border-bottom: 1px solid #e8f5e9; padding: 1.5rem 0;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+            <div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #2d6a4f;">500+</div>
+                <div style="color: #6c757d; font-size: 0.9rem; font-weight: 600;">Mandis Tracked</div>
+            </div>
+            <div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #2d6a4f;">50+</div>
+                <div style="color: #6c757d; font-size: 0.9rem; font-weight: 600;">Crop Varieties</div>
+            </div>
+            <div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #2d6a4f;">10K+</div>
+                <div style="color: #6c757d; font-size: 0.9rem; font-weight: 600;">Farmers Helped</div>
+            </div>
+            <div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #2d6a4f;">93%</div>
+                <div style="color: #6c757d; font-size: 0.9rem; font-weight: 600;">Prediction Accuracy</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SELL RECOMMENDATIONS -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">🎯 Today's Sell Recommendations</h2>
+        <p class="section-sub">Based on current prices, market trends & weather forecasts</p>
+        
+        <div class="grid-4">
+            {% for rec in recommendations %}
+            <div class="card" style="border-top: 4px solid {% if rec.color == 'green' %}#28a745{% elif rec.color == 'yellow' %}#ffc107{% else %}#fd7e14{% endif %};">
+                <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">{{ rec.crop }}</div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: {% if rec.color == 'green' %}#28a745{% elif rec.color == 'yellow' %}#856404{% else %}#c35a00{% endif %}; margin-bottom: 0.5rem;">
+                    {{ rec.action }}
+                </div>
+                <div style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.75rem;">{{ rec.reason }}</div>
+                <div style="font-size: 1.2rem; font-weight: 700;">₹{{ rec.price }}<span style="font-size:0.8rem;color:#6c757d">/quintal</span></div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="background: white;">
+    <div class="container">
+        <h2 class="section-title" style="text-align: center;">How FarmPrice Helps You</h2>
+        <p class="section-sub" style="text-align: center;">Powerful tools designed for Indian farmers</p>
+        
+        <div class="grid-3" style="margin-top: 2rem;">
+            <div class="card" style="text-align: center; padding: 2.5rem 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                <h3 style="font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem;">Price Prediction</h3>
+                <p style="color: #6c757d; line-height: 1.6;">AI-powered forecasts for next 15 days. Know if prices will rise or fall before making decisions.</p>
+                <a href="/predict/" class="btn btn-primary" style="margin-top: 1.25rem;">Try Now →</a>
+            </div>
+            <div class="card" style="text-align: center; padding: 2.5rem 2rem; border: 2px solid #2d6a4f;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🌤️</div>
+                <h3 style="font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem;">Weather-Smart Advice</h3>
+                <p style="color: #6c757d; line-height: 1.6;">Get personalized advice on when to harvest and sell based on your local weather forecast.</p>
+                <a href="/weather/" class="btn btn-primary" style="margin-top: 1.25rem;">Check Weather →</a>
+            </div>
+            <div class="card" style="text-align: center; padding: 2.5rem 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🛒</div>
+                <h3 style="font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.75rem;">Direct Marketplace</h3>
+                <p style="color: #6c757d; line-height: 1.6;">List your crops and connect directly with buyers. No middlemen, better prices for your produce.</p>
+                <a href="/marketplace/" class="btn btn-primary" style="margin-top: 1.25rem;">View Market →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LATEST LISTINGS -->
+{% if listings %}
+<section class="section">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h2 class="section-title">🌿 Latest Listings</h2>
+                <p class="section-sub" style="margin-bottom:0">Fresh produce available from farmers near you</p>
+            </div>
+            <a href="/marketplace/" class="btn btn-outline">View All →</a>
+        </div>
+        
+        <div class="grid-4">
+            {% for listing in listings %}
+            <div class="card">
+                <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">{{ listing.crop }}</div>
+                <div style="color: #6c757d; font-size: 0.85rem; margin-bottom: 0.75rem;">📍 {{ listing.location }}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 1.3rem; font-weight: 800; color: #2d6a4f;">₹{{ listing.asking_price }}</div>
+                        <div style="font-size: 0.75rem; color: #6c757d;">per quintal</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 700;">{{ listing.quantity }} qt</div>
+                        <div style="font-size: 0.75rem; color: #6c757d;">Available</div>
+                    </div>
+                </div>
+                <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #f0f0f0; font-size: 0.85rem; color: #6c757d;">
+                    👤 {{ listing.farmer.username }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section style="background: linear-gradient(135deg, #2d6a4f, #1b2b1e); padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+        <h2 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 1rem;">
+            Ready to Get Better Prices?
+        </h2>
+        <p style="color: #b2dfdb; font-size: 1.1rem; margin-bottom: 2rem;">Join thousands of farmers already using FarmPrice</p>
+        <a href="/register/" class="btn btn-gold" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">Get Started Free →</a>
+    </div>
+</section>
+
+{% endblock %}

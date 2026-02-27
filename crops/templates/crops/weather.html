@@ -1,0 +1,97 @@
+{% extends 'crops/base.html' %}
+{% block title %}Weather Advice - FarmPrice{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #0077b6, #48cae4); padding: 3rem 0;">
+    <div class="container">
+        <h1 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">🌤️ Weather-Based Advice</h1>
+        <p style="color: #caf0f8; font-size: 1.1rem;">Smart crop selling advice based on your local weather forecast</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Location Search -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <form method="get" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>📍 Your Location</label>
+                    <input type="text" name="location" value="{{ location }}" placeholder="Enter your district or city...">
+                </div>
+                <button type="submit" class="btn btn-primary">Get Advice</button>
+            </form>
+        </div>
+
+        <div class="grid-2">
+            <!-- Current Weather -->
+            <div>
+                <div class="card" style="background: linear-gradient(135deg, #0077b6, #48cae4); color: white; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div>
+                            <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.25rem;">📍 {{ weather.location }}</div>
+                            <div style="font-family: 'Syne', sans-serif; font-size: 4rem; font-weight: 800;">{{ weather.temp }}°C</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">{{ weather.condition }}</div>
+                        </div>
+                        <div style="font-size: 5rem; opacity: 0.4;">⛅</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Humidity</div>
+                            <div style="font-weight: 700;">{{ weather.humidity }}%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Rain Chance</div>
+                            <div style="font-weight: 700;">{{ weather.rainfall_chance }}%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Wind</div>
+                            <div style="font-weight: 700;">{{ weather.wind }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast -->
+                <div class="card">
+                    <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 1rem;">5-Day Forecast</h3>
+                    <div style="display: flex; justify-content: space-between; gap: 0.5rem;">
+                        {% for day in weather.forecast %}
+                        <div style="text-align: center; flex: 1; padding: 0.75rem; border-radius: 10px; background: #f8f9fa;">
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #6c757d;">{{ day.day }}</div>
+                            <div style="font-size: 1.5rem; margin: 0.5rem 0;">{{ day.icon }}</div>
+                            <div style="font-weight: 700;">{{ day.temp }}°</div>
+                            <div style="font-size: 0.75rem; color: #0077b6;">💧 {{ day.rain }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crop Advice -->
+            <div>
+                <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 1.25rem;">🌾 Crop-Specific Advice</h3>
+                {% for advice in weather.advice %}
+                <div class="card" style="margin-bottom: 1rem; border-left: 4px solid {% if advice.urgency == 'high' %}#dc3545{% elif advice.urgency == 'medium' %}#fd7e14{% else %}#28a745{% endif %};">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div style="font-weight: 700; font-size: 1.05rem;">{{ advice.crop }}</div>
+                        <span class="badge" style="background: {% if advice.urgency == 'high' %}#f8d7da{% elif advice.urgency == 'medium' %}#ffe5d0{% else %}#d4edda{% endif %}; color: {% if advice.urgency == 'high' %}#721c24{% elif advice.urgency == 'medium' %}#c35a00{% else %}#155724{% endif %};">
+                            {% if advice.urgency == 'high' %}⚠️ Urgent{% elif advice.urgency == 'medium' %}📌 Soon{% else %}✅ Flexible{% endif %}
+                        </span>
+                    </div>
+                    <p style="color: #495057; line-height: 1.6; font-size: 0.95rem;">{{ advice.advice }}</p>
+                </div>
+                {% endfor %}
+
+                <!-- Weather Impact on Prices -->
+                <div class="card" style="background: #fff8e1; border: 1px solid #ffe082; margin-top: 1rem;">
+                    <h4 style="font-weight: 700; margin-bottom: 0.75rem;">💡 Weather Impact on Prices</h4>
+                    <ul style="list-style: none; font-size: 0.9rem; line-height: 2;">
+                        <li>🌧️ Heavy rain tomorrow → Vegetable prices likely to <strong style="color:#28a745">rise 10-20%</strong></li>
+                        <li>☀️ Clear weather next week → Good for transport, stable prices</li>
+                        <li>💨 Strong winds → Delay outdoor drying of grains</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

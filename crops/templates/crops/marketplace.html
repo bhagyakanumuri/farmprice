@@ -1,0 +1,80 @@
+{% extends 'crops/base.html' %}
+{% block title %}Marketplace - FarmPrice{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #1b2b1e, #2d6a4f); padding: 3rem 0;">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">🛒 Marketplace</h1>
+            <p style="color: #b2dfdb; font-size: 1.1rem;">Buy directly from farmers — No middlemen, better prices</p>
+        </div>
+        <a href="/sell/" class="btn btn-gold" style="font-size: 1.05rem;">+ List Your Crop</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <form method="get" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0; min-width: 200px;">
+                    <label>🌾 Filter by Crop</label>
+                    <input type="text" name="crop" value="{{ crop_filter }}" placeholder="e.g. Wheat, Rice...">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+                {% if crop_filter %}<a href="/marketplace/" class="btn btn-outline">Clear</a>{% endif %}
+            </form>
+        </div>
+
+        {% if listings %}
+        <div class="grid-3">
+            {% for listing in listings %}
+            <div class="card" style="transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 30px rgba(45,106,79,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div>
+                        <div style="font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: #2d6a4f;">{{ listing.crop }}</div>
+                        <div style="color: #6c757d; font-size: 0.9rem; margin-top: 0.25rem;">📍 {{ listing.location }}</div>
+                    </div>
+                    <span class="badge badge-green">Available</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; padding: 1rem; background: #f8fffe; border-radius: 10px;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Price</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #2d6a4f;">₹{{ listing.asking_price }}</div>
+                        <div style="font-size: 0.75rem; color: #6c757d;">per quintal</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; color: #6c757d; font-weight: 600; text-transform: uppercase;">Quantity</div>
+                        <div style="font-size: 1.5rem; font-weight: 800;">{{ listing.quantity }}</div>
+                        <div style="font-size: 0.75rem; color: #6c757d;">quintals</div>
+                    </div>
+                </div>
+                
+                {% if listing.description %}
+                <p style="color: #6c757d; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem;">{{ listing.description }}</p>
+                {% endif %}
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid #f0f0f0;">
+                    <div style="font-size: 0.85rem; color: #6c757d;">👤 {{ listing.farmer.username }}</div>
+                    <div style="font-size: 0.8rem; color: #6c757d;">{{ listing.created_at|date:"M d, Y" }}</div>
+                </div>
+                
+                <button onclick="alert('Contact feature coming soon! Farmer: {{ listing.farmer.username }}')" 
+                        class="btn btn-primary" style="width: 100%; margin-top: 1rem; text-align: center;">
+                    📞 Contact Farmer
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem; color: #6c757d;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🌾</div>
+            <h3 style="font-family: 'Syne', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem;">No listings yet</h3>
+            <p>Be the first to list your crop!</p>
+            <a href="/sell/" class="btn btn-primary" style="margin-top: 1rem;">+ Add Your Listing</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

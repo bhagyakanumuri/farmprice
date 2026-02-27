@@ -1,0 +1,91 @@
+{% extends 'crops/base.html' %}
+{% block title %}Crop Prices - FarmPrice{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #1b2b1e, #2d6a4f); padding: 3rem 0;">
+    <div class="container">
+        <h1 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">📊 Live Crop Prices</h1>
+        <p style="color: #b2dfdb; font-size: 1.1rem;">Real-time mandi prices from across India</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+                <div class="form-group" style="flex: 1; min-width: 180px; margin-bottom: 0;">
+                    <label>Filter by State</label>
+                    <select name="state">
+                        <option value="">All States</option>
+                        {% for state in states %}
+                        <option value="{{ state }}" {% if state == state_filter %}selected{% endif %}>{{ state }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 180px; margin-bottom: 0;">
+                    <label>Filter by Crop</label>
+                    <input type="text" name="crop" value="{{ crop_filter }}" placeholder="e.g. Wheat">
+                </div>
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="/prices/" class="btn btn-outline">Reset</a>
+            </form>
+        </div>
+
+        {% if crops %}
+        <!-- Price Table -->
+        <div class="card" style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+                <thead>
+                    <tr style="background: #f8fffe; border-bottom: 2px solid #e8f5e9;">
+                        <th style="padding: 1rem; text-align: left; font-family: 'Syne', sans-serif; font-weight: 700;">Crop</th>
+                        <th style="padding: 1rem; text-align: left; font-family: 'Syne', sans-serif; font-weight: 700;">Market</th>
+                        <th style="padding: 1rem; text-align: left; font-family: 'Syne', sans-serif; font-weight: 700;">State</th>
+                        <th style="padding: 1rem; text-align: right; font-family: 'Syne', sans-serif; font-weight: 700;">Min (₹)</th>
+                        <th style="padding: 1rem; text-align: right; font-family: 'Syne', sans-serif; font-weight: 700;">Current (₹)</th>
+                        <th style="padding: 1rem; text-align: right; font-family: 'Syne', sans-serif; font-weight: 700;">Max (₹)</th>
+                        <th style="padding: 1rem; text-align: center; font-family: 'Syne', sans-serif; font-weight: 700;">Trend</th>
+                        <th style="padding: 1rem; text-align: center; font-family: 'Syne', sans-serif; font-weight: 700;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for crop in crops %}
+                    <tr style="border-bottom: 1px solid #f0f7f0; transition: background 0.15s;" onmouseover="this.style.background='#f8fffe'" onmouseout="this.style.background=''">
+                        <td style="padding: 0.9rem 1rem; font-weight: 700;">{{ crop.get_name_display }}</td>
+                        <td style="padding: 0.9rem 1rem; color: #6c757d;">{{ crop.market_name }}</td>
+                        <td style="padding: 0.9rem 1rem; color: #6c757d;">{{ crop.state }}</td>
+                        <td style="padding: 0.9rem 1rem; text-align: right; color: #dc3545;">₹{{ crop.min_price }}</td>
+                        <td style="padding: 0.9rem 1rem; text-align: right; font-weight: 700; font-size: 1.05rem; color: #2d6a4f;">₹{{ crop.current_price }}</td>
+                        <td style="padding: 0.9rem 1rem; text-align: right; color: #28a745;">₹{{ crop.max_price }}</td>
+                        <td style="padding: 0.9rem 1rem; text-align: center;">
+                            {% if crop.trend == 'up' %}
+                                <span class="badge badge-up">▲ Rising</span>
+                            {% elif crop.trend == 'down' %}
+                                <span class="badge badge-down">▼ Falling</span>
+                            {% else %}
+                                <span class="badge badge-stable">→ Stable</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 0.9rem 1rem; text-align: center;">
+                            <a href="/predict/?crop={{ crop.name }}" style="color: #2d6a4f; font-weight: 700; text-decoration: none; font-size: 0.85rem;">📈 Predict</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem; color: #6c757d;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
+            <h3 style="font-family: 'Syne', sans-serif;">No price data found</h3>
+            <p>Try adjusting your filters or add prices via the <a href="/admin/">admin panel</a>.</p>
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #fff8e1; border-radius: 10px; font-size: 0.9rem; color: #856404;">
+            💡 <strong>Tip:</strong> Prices are in ₹ per quintal (100 kg). Last updated: today. 
+            Connect a real-time API like <strong>data.gov.in Agmarket</strong> for live data.
+        </div>
+    </div>
+</section>
+{% endblock %}

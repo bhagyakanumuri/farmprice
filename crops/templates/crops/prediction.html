@@ -1,0 +1,176 @@
+{% extends 'crops/base.html' %}
+
+{% block title %}Price Prediction - FarmPrice{% endblock %}
+
+{% block content %}
+<section style="background: linear-gradient(135deg, #1b2b1e, #2d6a4f); padding: 3rem 0;">
+    <div class="container">
+        <h1 style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">📈 Price Prediction</h1>
+        <p style="color: #b2dfdb; font-size: 1.1rem;">AI-powered 15-day price forecasts to help you decide when to sell</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <!-- Crop Selector -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 1rem;">Select Crop</h3>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                {% for crop in crop_choices %}
+                <a href="/predict/?crop={{ crop }}" 
+                   style="padding: 0.5rem 1.25rem; border-radius: 20px; font-weight: 700; text-decoration: none; font-size: 0.9rem;
+                          background: {% if crop == crop_name %}#2d6a4f{% else %}#f0f0f0{% endif %};
+                          color: {% if crop == crop_name %}white{% else %}#333{% endif %};">
+                    {{ crop|title }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recommendation Box -->
+        <div class="card" style="margin-bottom: 2rem; border: 2px solid {% if recommendation.action == 'SELL' %}#28a745{% else %}#ffc107{% endif %}; background: {% if recommendation.action == 'SELL' %}#f0fff4{% else %}#fffbf0{% endif %};">
+            <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center;">
+                <div>
+                    <div style="font-size: 0.9rem; color: #6c757d; font-weight: 600; margin-bottom: 0.25rem;">RECOMMENDATION</div>
+                    <div style="font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: {% if recommendation.action == 'SELL' %}#28a745{% else %}#856404{% endif %};">
+                        {{ recommendation.action }}
+                    </div>
+                </div>
+                <div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600;">Best sell date:</span>
+                        <strong style="color: #2d6a4f; font-size: 1.1rem;"> {{ recommendation.best_date }}</strong>
+                    </div>
+                    <div style="color: #6c757d; font-size: 0.95rem;">
+                        {% if recommendation.action == 'SELL' %}
+                        💡 Prices are expected to peak. Sell now for maximum profit.
+                        {% else %}
+                        ⏳ Hold your {{ crop_name }}. Prices are predicted to rise soon.
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.85rem; color: #6c757d; margin-bottom: 0.25rem;">Expected Price</div>
+                    <div style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: #2d6a4f;">₹{{ recommendation.expected_price }}</div>
+                    <div style="font-size: 0.85rem; color: {% if recommendation.profit_percent > 0 %}#28a745{% else %}#dc3545{% endif %}; font-weight: 700;">
+                        {% if recommendation.profit_percent > 0 %}▲{% else %}▼{% endif %} {{ recommendation.profit_percent }}% from today
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.25rem;">{{ crop_name|title }} Price Chart</h3>
+                <div style="display: flex; gap: 1rem; font-size: 0.85rem; font-weight: 600;">
+                    <span style="color: #2d6a4f;">— Historical</span>
+                    <span style="color: #f4a261;">- - Predicted</span>
+                </div>
+            </div>
+            <canvas id="priceChart" height="100"></canvas>
+        </div>
+
+        <!-- Price Stats -->
+        <div class="grid-4">
+            <div class="card" style="text-align: center;">
+                <div style="color: #6c757d; font-size: 0.85rem; margin-bottom: 0.5rem;">CURRENT PRICE</div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: #2d6a4f;">₹{{ recommendation.current_price }}</div>
+                <div style="font-size: 0.8rem; color: #6c757d;">per quintal</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="color: #6c757d; font-size: 0.85rem; margin-bottom: 0.5rem;">PREDICTED HIGH</div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: #28a745;">₹{{ recommendation.expected_price }}</div>
+                <div style="font-size: 0.8rem; color: #6c757d;">next 15 days</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="color: #6c757d; font-size: 0.85rem; margin-bottom: 0.5rem;">POTENTIAL GAIN</div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: {% if recommendation.profit_percent > 0 %}#28a745{% else %}#dc3545{% endif %};">
+                    {{ recommendation.profit_percent }}%
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d;">if sold at peak</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="color: #6c757d; font-size: 0.85rem; margin-bottom: 0.5rem;">BEST SELL DATE</div>
+                <div style="font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: #2d6a4f;">{{ recommendation.best_date }}</div>
+                <div style="font-size: 0.8rem; color: #6c757d;">recommended</div>
+            </div>
+        </div>
+
+        <!-- Sell CTA -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/sell/" class="btn btn-gold" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">🌾 List Your {{ crop_name|title }} for Sale →</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const labels = {{ labels|safe }};
+const historical = {{ historical|safe }};
+const predicted = {{ predicted|safe }};
+
+// Build datasets
+const histData = historical.map((v, i) => v);
+const predData = [...new Array(historical.length).fill(null), ...predicted];
+
+// The last historical point connects to first predicted
+const bridgeIdx = historical.length - 1;
+
+const ctx = document.getElementById('priceChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Historical Price (₹/quintal)',
+                data: histData,
+                borderColor: '#2d6a4f',
+                backgroundColor: 'rgba(45, 106, 79, 0.1)',
+                borderWidth: 2.5,
+                pointRadius: 2,
+                fill: true,
+                tension: 0.4,
+            },
+            {
+                label: 'Predicted Price (₹/quintal)',
+                data: predData,
+                borderColor: '#f4a261',
+                backgroundColor: 'rgba(244, 162, 97, 0.08)',
+                borderWidth: 2.5,
+                borderDash: [6, 4],
+                pointRadius: 3,
+                pointBackgroundColor: '#f4a261',
+                fill: false,
+                tension: 0.4,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+                callbacks: {
+                    label: ctx => '₹' + ctx.parsed.y + '/quintal'
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: { callback: v => '₹' + v },
+                grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            x: {
+                ticks: {
+                    maxTicksLimit: 12,
+                    maxRotation: 45,
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
