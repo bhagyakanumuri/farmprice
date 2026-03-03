@@ -19,9 +19,19 @@
                {% if not state_filter and not region %}background:#2d6a4f; color:white;{% else %}background:white; color:#2d6a4f; border: 2px solid #2d6a4f;{% endif %}">
                 🌍 All India
             </a>
+            <a href="/prices/?state=Andhra+Pradesh"
+               style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+               {% if state_filter == 'Andhra Pradesh' %}background:#e65100; color:white;{% else %}background:white; color:#e65100; border: 2px solid #e65100;{% endif %}">
+                🏛️ Andhra Pradesh
+            </a>
+            <a href="/prices/?state=Telangana"
+               style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+               {% if state_filter == 'Telangana' %}background:#6a1b9a; color:white;{% else %}background:white; color:#6a1b9a; border: 2px solid #6a1b9a;{% endif %}">
+                🏙️ Telangana
+            </a>
             <a href="/prices/?state=Tamil+Nadu"
                style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
-               {% if state_filter == 'Tamil Nadu' %}background:#e65100; color:white;{% else %}background:white; color:#e65100; border: 2px solid #e65100;{% endif %}">
+               {% if state_filter == 'Tamil Nadu' %}background:#c62828; color:white;{% else %}background:white; color:#c62828; border: 2px solid #c62828;{% endif %}">
                 🌴 Tamil Nadu
             </a>
             <a href="/prices/?state=Karnataka"
