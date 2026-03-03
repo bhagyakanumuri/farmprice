@@ -4,22 +4,35 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Crop, FarmerListing
+from .api_client import get_all_prices, get_price_summary, fetch_mandi_prices, CROP_API_NAMES
 import json
 import random
 from datetime import date, timedelta
 
 
 def home(request):
-    crops = Crop.objects.all()[:6]
+    live_prices = get_all_prices()
+
+    recommendations = []
+    for crop in live_prices[:4]:
+        if crop['trend'] == 'up':
+            action, reason, color = "SELL NOW", "Prices are rising", "green"
+        elif crop['trend'] == 'down':
+            action, reason, color = "HOLD", "Prices falling, wait", "red"
+        else:
+            action, reason, color = "MONITOR", "Prices are stable", "yellow"
+
+        recommendations.append({
+            "crop": crop['display_name'],
+            "action": action,
+            "reason": reason,
+            "price": str(int(crop['current_price'])),
+            "color": color,
+        })
+
     listings = FarmerListing.objects.filter(is_available=True)[:4]
-    recommendations = [
-        {"crop": "Wheat", "action": "SELL NOW", "reason": "Prices at 3-month high", "price": "2340", "color": "green"},
-        {"crop": "Rice", "action": "HOLD", "reason": "Monsoon expected to raise prices", "price": "1980", "color": "yellow"},
-        {"crop": "Tomato", "action": "SELL SOON", "reason": "Supply increasing next week", "price": "850", "color": "orange"},
-        {"crop": "Onion", "action": "SELL NOW", "reason": "Festival demand peak", "price": "1200", "color": "green"},
-    ]
     context = {
-        'crops': crops,
+        'crops': live_prices[:6],
         'listings': listings,
         'recommendations': recommendations,
     }
@@ -28,45 +41,113 @@ def home(request):
 
 def crop_prices(request):
     state_filter = request.GET.get('state', '')
-    crop_filter = request.GET.get('crop', '')
-    crops = Crop.objects.all()
-    if state_filter:
-        crops = crops.filter(state__icontains=state_filter)
+    crop_filter = request.GET.get('crop', '').lower()
+
+    all_prices = get_all_prices()
+
     if crop_filter:
-        crops = crops.filter(name__icontains=crop_filter)
-    states = Crop.objects.values_list('state', flat=True).distinct()
-    context = {'crops': crops, 'states': states, 'state_filter': state_filter, 'crop_filter': crop_filter}
+        all_prices = [c for c in all_prices if crop_filter in c['name']]
+    if state_filter:
+        all_prices = [c for c in all_prices if state_filter.lower() in c['state'].lower()]
+
+    states = list(set(c['state'] for c in all_prices if c['state'] != 'N/A'))
+
+    context = {
+        'crops': all_prices,
+        'states': states,
+        'state_filter': state_filter,
+        'crop_filter': crop_filter,
+    }
     return render(request, 'crops/prices.html', context)
 
 
 def price_prediction(request):
     crop_name = request.GET.get('crop', 'wheat')
     today = date.today()
+
+    commodity = CROP_API_NAMES.get(crop_name, crop_name.capitalize())
+    records = fetch_mandi_prices(commodity, limit=30)
+
     labels = []
     historical = []
     predicted = []
-    base_price = {"wheat": 2200, "rice": 1900, "corn": 1500, "tomato": 700, "onion": 1000}.get(crop_name, 2000)
-    for i in range(30, 0, -1):
-        d = today - timedelta(days=i)
-        labels.append(d.strftime("%b %d"))
-        historical.append(base_price + random.randint(-200, 200))
-    last_price = historical[-1]
-    for i in range(1, 16):
-        d = today + timedelta(days=i)
-        labels.append(d.strftime("%b %d"))
-        historical.append(None)
-        last_price = int(last_price * random.uniform(0.98, 1.04))
-        predicted.append(last_price)
-    max_pred = max(predicted)
-    best_day_idx = predicted.index(max_pred)
+
+    if records:
+        real_prices = []
+        for r in reversed(records):
+            try:
+                price = float(r.get("modal_price", 0))
+                arrival_date = r.get("arrival_date", "")
+                if price > 0:
+                    real_prices.append((arrival_date, price))
+            except:
+                pass
+
+        for i, (d, p) in enumerate(real_prices[-30:]):
+            labels.append(d)
+            historical.append(p)
+
+        while len(historical) < 30:
+            labels.insert(0, "")
+            historical.insert(0, historical[0] if historical else 2000)
+
+        if len(historical) >= 7:
+            recent = historical[-7:]
+            weights = [1, 1, 2, 2, 3, 3, 4]
+            weighted_avg = sum(w * p for w, p in zip(weights, recent)) / sum(weights)
+            trend = (historical[-1] - historical[-7]) / 7
+        else:
+            weighted_avg = historical[-1] if historical else 2000
+            trend = 0
+
+        last_price = weighted_avg
+        for i in range(1, 16):
+            d = today + timedelta(days=i)
+            labels.append(d.strftime("%b %d"))
+            historical.append(None)
+            last_price = last_price + (trend * 0.85) + (last_price * 0.002)
+            predicted.append(round(last_price, 2))
+
+    else:
+        base_price = {"wheat": 2200, "rice": 1900, "corn": 1500, "tomato": 700, "onion": 1000}.get(crop_name, 2000)
+        for i in range(30, 0, -1):
+            d = today - timedelta(days=i)
+            labels.append(d.strftime("%b %d"))
+            historical.append(base_price + (i * 2))
+
+        last_price = historical[-1]
+        for i in range(1, 16):
+            d = today + timedelta(days=i)
+            labels.append(d.strftime("%b %d"))
+            historical.append(None)
+            last_price = int(last_price * 1.01)
+            predicted.append(last_price)
+
+    current_price = historical[29] if len(historical) > 29 and historical[29] else 2000
+    max_pred = max(predicted) if predicted else current_price
+    best_day_idx = predicted.index(max_pred) if predicted else 0
     best_sell_date = today + timedelta(days=best_day_idx + 1)
+    profit_percent = round((max_pred - current_price) / current_price * 100, 1) if current_price else 0
+
+    if profit_percent > 5:
+        action = "SELL LATER"
+        advice = f"Prices expected to rise {profit_percent}%. Wait for best price."
+    elif profit_percent < -3:
+        action = "SELL NOW"
+        advice = "Prices expected to fall. Sell as soon as possible."
+    else:
+        action = "MONITOR"
+        advice = "Prices stable. Monitor daily before deciding."
+
     recommendation = {
-        "action": "SELL" if max_pred > historical[29] * 1.05 else "HOLD",
+        "action": action,
+        "advice": advice,
         "best_date": best_sell_date.strftime("%B %d, %Y"),
-        "expected_price": max_pred,
-        "current_price": historical[29],
-        "profit_percent": round((max_pred - historical[29]) / historical[29] * 100, 1),
+        "expected_price": round(max_pred, 2),
+        "current_price": round(current_price, 2),
+        "profit_percent": profit_percent,
     }
+
     crop_choices = ['wheat', 'rice', 'corn', 'tomato', 'onion', 'cotton', 'soybean', 'potato']
     context = {
         'crop_name': crop_name,
