@@ -11,6 +11,26 @@
 
 <section class="section">
     <div class="container">
+
+        <!-- Quick Region Filters -->
+        <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="/prices/"
+               style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+               {% if not state_filter and not region %}background:#2d6a4f; color:white;{% else %}background:white; color:#2d6a4f; border: 2px solid #2d6a4f;{% endif %}">
+                🌍 All India
+            </a>
+            <a href="/prices/?state=Tamil+Nadu"
+               style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+               {% if state_filter == 'Tamil Nadu' %}background:#e65100; color:white;{% else %}background:white; color:#e65100; border: 2px solid #e65100;{% endif %}">
+                🌴 Tamil Nadu
+            </a>
+            <a href="/prices/?state=Karnataka"
+               style="padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+               {% if state_filter == 'Karnataka' %}background:#1565c0; color:white;{% else %}background:white; color:#1565c0; border: 2px solid #1565c0;{% endif %}">
+                🏛️ Karnataka
+            </a>
+        </div>
+
         <!-- Filters -->
         <div class="card" style="margin-bottom: 2rem;">
             <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
@@ -50,8 +70,10 @@
                 </thead>
                 <tbody>
                     {% for crop in crops %}
-                    <tr style="border-bottom: 1px solid #f0f7f0; transition: background 0.15s;" onmouseover="this.style.background='#f8fffe'" onmouseout="this.style.background=''">
-                        <td style="padding: 0.9rem 1rem; font-weight: 700;">{{ crop.get_name_display }}</td>
+                    <tr style="border-bottom: 1px solid #f0f7f0; transition: background 0.15s;"
+                        onmouseover="this.style.background='#f8fffe'"
+                        onmouseout="this.style.background=''">
+                        <td style="padding: 0.9rem 1rem; font-weight: 700;">{{ crop.display_name }}</td>
                         <td style="padding: 0.9rem 1rem; color: #6c757d;">{{ crop.market_name }}</td>
                         <td style="padding: 0.9rem 1rem; color: #6c757d;">{{ crop.state }}</td>
                         <td style="padding: 0.9rem 1rem; text-align: right; color: #dc3545;">₹{{ crop.min_price }}</td>
@@ -78,14 +100,14 @@
         <div style="text-align: center; padding: 4rem; color: #6c757d;">
             <div style="font-size: 4rem; margin-bottom: 1rem;">📊</div>
             <h3 style="font-family: 'Syne', sans-serif;">No price data found</h3>
-            <p>Try adjusting your filters or add prices via the <a href="/admin/">admin panel</a>.</p>
+            <p>Try adjusting your filters or check back later.</p>
         </div>
         {% endif %}
-        
+
         <div style="margin-top: 1.5rem; padding: 1rem; background: #fff8e1; border-radius: 10px; font-size: 0.9rem; color: #856404;">
-            💡 <strong>Tip:</strong> Prices are in ₹ per quintal (100 kg). Last updated: today. 
-            Connect a real-time API like <strong>data.gov.in Agmarket</strong> for live data.
+            💡 <strong>Tip:</strong> Prices are in ₹ per quintal (100 kg). Data sourced from data.gov.in Agmarket. Updated hourly.
         </div>
+
     </div>
 </section>
 {% endblock %}
