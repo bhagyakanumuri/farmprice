@@ -1,1 +1,1 @@
-web: gunicorn farmprice.wsgi --timeout 120 --workers 2
+web: python manage.py createcachetable && gunicorn farmprice.wsgi --timeout 120 --workers 2
