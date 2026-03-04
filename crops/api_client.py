@@ -24,8 +24,6 @@ CROP_API_NAMES = {
     'greengram': 'Green Gram (Whole)',
 }
 
-AP_TELANGANA_STATES = ['Andhra Pradesh', 'Telangana']
-
 
 def fetch_mandi_prices(commodity='Wheat', limit=10, state=None):
     cache_key = f"mandi_{commodity.lower()}_{state or 'all'}"
@@ -41,7 +39,7 @@ def fetch_mandi_prices(commodity='Wheat', limit=10, state=None):
         "filters[commodity]": commodity,
     }
 
-   if state:
+    if state:
         params["filters[state.keyword]"] = state
 
     try:
@@ -106,7 +104,7 @@ def get_all_prices(state=None):
 
 def get_ap_telangana_prices():
     results = []
-    for state in AP_TELANGANA_STATES:
+    for state in ['Andhra Pradesh', 'Telangana']:
         for crop_key in CROP_API_NAMES.keys():
             summary = get_price_summary(crop_key, state=state)
             if summary:
