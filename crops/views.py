@@ -11,10 +11,17 @@ from datetime import date, timedelta
 
 
 def home(request):
-    live_prices = get_all_prices()
+    # Only fetch 4 crops for homepage to keep it fast
+    from .api_client import get_price_summary
+    home_crops = ['wheat', 'rice', 'tomato', 'onion']
+    live_prices = []
+    for crop in home_crops:
+        summary = get_price_summary(crop)
+        if summary:
+            live_prices.append(summary)
 
     recommendations = []
-    for crop in live_prices[:4]:
+    for crop in live_prices:
         if crop['trend'] == 'up':
             action, reason, color = "SELL NOW", "Prices are rising", "green"
         elif crop['trend'] == 'down':
@@ -32,7 +39,7 @@ def home(request):
 
     listings = FarmerListing.objects.filter(is_available=True)[:4]
     context = {
-        'crops': live_prices[:6],
+        'crops': live_prices,
         'listings': listings,
         'recommendations': recommendations,
     }
@@ -42,21 +49,29 @@ def home(request):
 def crop_prices(request):
     state_filter = request.GET.get('state', '')
     crop_filter = request.GET.get('crop', '').lower()
+    region = request.GET.get('region', '')  # 'ap_telangana' or ''
 
-    all_prices = get_all_prices()
+    if region == 'ap_telangana':
+        from .api_client import get_ap_telangana_prices
+        all_prices = get_ap_telangana_prices()
+    elif state_filter:
+        all_prices = get_all_prices(state=state_filter)
+    else:
+        all_prices = get_all_prices()
 
     if crop_filter:
         all_prices = [c for c in all_prices if crop_filter in c['name']]
-    if state_filter:
-        all_prices = [c for c in all_prices if state_filter.lower() in c['state'].lower()]
 
-    states = list(set(c['state'] for c in all_prices if c['state'] != 'N/A'))
+    states = ['Andhra Pradesh', 'Telangana'] + list(
+        set(c['state'] for c in all_prices if c['state'] not in ['N/A', 'Andhra Pradesh', 'Telangana'])
+    )
 
     context = {
         'crops': all_prices,
         'states': states,
         'state_filter': state_filter,
         'crop_filter': crop_filter,
+        'region': region,
     }
     return render(request, 'crops/prices.html', context)
 
