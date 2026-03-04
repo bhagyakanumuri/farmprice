@@ -41,8 +41,8 @@ def fetch_mandi_prices(commodity='Wheat', limit=10, state=None):
         "filters[commodity]": commodity,
     }
 
-    if state:
-        params["filters[state]"] = state
+   if state:
+        params["filters[state.keyword]"] = state
 
     try:
         response = requests.get(url, params=params, timeout=10)
