@@ -27,7 +27,7 @@ def fetch_and_save_prices(state=None):
         params["filters[state.keyword]"] = state
 
     try:
-        response = requests.get(url, params=params, timeout=30)
+        response = requests.get(url, params=params, timeout=10)
         data = response.json()
         return data.get("records", [])
     except Exception as e:
@@ -47,7 +47,7 @@ def fetch_mandi_prices(commodity='Wheat', limit=30, state=None):
         params["filters[state.keyword]"] = state
 
     try:
-        response = requests.get(url, params=params, timeout=30)
+        response = requests.get(url, params=params, timeout=10)
         data = response.json()
         return data.get("records", [])
     except Exception as e:
