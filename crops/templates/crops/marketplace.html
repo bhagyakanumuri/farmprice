@@ -60,10 +60,18 @@
                     <div style="font-size: 0.8rem; color: #6c757d;">{{ listing.created_at|date:"M d, Y" }}</div>
                 </div>
                 
-                <button onclick="alert('Contact feature coming soon! Farmer: {{ listing.farmer.username }}')" 
+                {% if listing.phone %}
+                <a href="https://wa.me/91{{ listing.phone }}?text=Hi, I'm interested in your {{ listing.crop }} listing on FarmPrice. Is it still available?"
+                   target="_blank"
+                   class="btn btn-primary" style="width: 100%; margin-top: 1rem; text-align: center; display: block;">
+                    💬 Contact on WhatsApp
+                </a>
+                {% else %}
+                <button onclick="alert('Farmer: {{ listing.farmer.username }}\nLocation: {{ listing.location }}')"
                         class="btn btn-primary" style="width: 100%; margin-top: 1rem; text-align: center;">
                     📞 Contact Farmer
                 </button>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

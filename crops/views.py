@@ -6,13 +6,10 @@ from django.contrib import messages
 from .models import Crop, FarmerListing
 from .api_client import get_all_prices, get_price_summary, fetch_mandi_prices, CROP_API_NAMES
 import json
-import random
 from datetime import date, timedelta
 
 
 def home(request):
-    # Only fetch 4 crops for homepage to keep it fast
-    from .api_client import get_price_summary
     home_crops = ['wheat', 'rice', 'tomato', 'onion']
     live_prices = []
     for crop in home_crops:
@@ -49,12 +46,9 @@ def home(request):
 def crop_prices(request):
     state_filter = request.GET.get('state', '')
     crop_filter = request.GET.get('crop', '').lower()
-    region = request.GET.get('region', '')  # 'ap_telangana' or ''
+    region = request.GET.get('region', '')
 
-    if region == 'ap_telangana':
-        from .api_client import get_ap_telangana_prices
-        all_prices = get_ap_telangana_prices()
-    elif state_filter:
+    if state_filter:
         all_prices = get_all_prices(state=state_filter)
     else:
         all_prices = get_all_prices()
@@ -62,9 +56,8 @@ def crop_prices(request):
     if crop_filter:
         all_prices = [c for c in all_prices if crop_filter in c['name']]
 
-    states = ['Andhra Pradesh', 'Telangana'] + list(
-        set(c['state'] for c in all_prices if c['state'] not in ['N/A', 'Andhra Pradesh', 'Telangana'])
-    )
+    states = ['Andhra Pradesh', 'Telangana', 'Tamil Nadu', 'Karnataka',
+              'Maharashtra', 'Punjab', 'Uttar Pradesh', 'Rajasthan']
 
     context = {
         'crops': all_prices,
@@ -210,20 +203,30 @@ def sell_crop(request):
             quantity=request.POST['quantity'],
             asking_price=request.POST['asking_price'],
             location=request.POST['location'],
+            phone=request.POST.get('phone', ''),
             description=request.POST.get('description', ''),
         )
         messages.success(request, 'Your listing has been posted!')
         return redirect('marketplace')
-    crop_choices = ['Wheat', 'Rice', 'Corn', 'Cotton', 'Sugarcane', 'Soybean', 'Tomato', 'Potato', 'Onion', 'Groundnut']
+    crop_choices = ['Wheat', 'Rice', 'Corn', 'Cotton', 'Sugarcane', 'Soybean',
+                    'Tomato', 'Potato', 'Onion', 'Groundnut', 'Chilli', 'Turmeric',
+                    'Blackgram', 'Greengram']
     return render(request, 'crops/sell.html', {'crop_choices': crop_choices})
 
 
 def marketplace(request):
-    listings = FarmerListing.objects.filter(is_available=True)
+    listings = FarmerListing.objects.filter(is_available=True).order_by('-created_at')
     crop_filter = request.GET.get('crop', '')
+    location_filter = request.GET.get('location', '')
     if crop_filter:
         listings = listings.filter(crop__icontains=crop_filter)
-    return render(request, 'crops/marketplace.html', {'listings': listings, 'crop_filter': crop_filter})
+    if location_filter:
+        listings = listings.filter(location__icontains=location_filter)
+    return render(request, 'crops/marketplace.html', {
+        'listings': listings,
+        'crop_filter': crop_filter,
+        'location_filter': location_filter,
+    })
 
 
 def register(request):
