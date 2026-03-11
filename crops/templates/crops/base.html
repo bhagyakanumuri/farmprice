@@ -41,6 +41,7 @@
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            min-height: 60px;
         }
 
         .nav-logo {
@@ -87,6 +88,68 @@
         }
 
         .nav-links .btn-sell:hover { background: #e08c47; }
+
+        /* HAMBURGER */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 0.5rem;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #ccc;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: var(--dark);
+            z-index: 99;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .mobile-menu.open { display: flex; }
+
+        .mobile-menu a {
+            color: #ccc;
+            text-decoration: none;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .mobile-menu a:hover { color: white; background: var(--green); }
+
+        .mobile-menu .btn-sell {
+            background: var(--gold);
+            color: var(--dark) !important;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+        }
 
         /* MESSAGES */
         .messages { padding: 1rem 2rem 0; }
@@ -136,26 +199,11 @@
             font-family: 'Nunito', sans-serif;
         }
 
-        .btn-primary {
-            background: var(--green);
-            color: white;
-        }
-
+        .btn-primary { background: var(--green); color: white; }
         .btn-primary:hover { background: #1e4d38; transform: translateY(-1px); }
-
-        .btn-gold {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
+        .btn-gold { background: var(--gold); color: var(--dark); }
         .btn-gold:hover { background: #e08c47; transform: translateY(-1px); }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--green);
-            color: var(--green);
-        }
-
+        .btn-outline { background: transparent; border: 2px solid var(--green); color: var(--green); }
         .btn-outline:hover { background: var(--green); color: white; }
 
         /* BADGE */
@@ -196,21 +244,16 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 
-        @media (max-width: 768px) {
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
-
         /* CONTAINER */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
         .section { padding: 3rem 0; }
 
-        /* TREND ARROWS */
+        /* TREND */
         .trend-up { color: #28a745; }
         .trend-down { color: #dc3545; }
         .trend-stable { color: #ffc107; }
 
-        /* FORM STYLES */
+        /* FORMS */
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--dark); }
         .form-group input, .form-group select, .form-group textarea {
@@ -227,6 +270,43 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--green);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .container { padding: 0 1rem; }
+            .section { padding: 2rem 0; }
+            .section-title { font-size: 1.5rem; }
+            .card { padding: 1rem; }
+            .btn { padding: 0.65rem 1.25rem; font-size: 0.9rem; }
+
+            /* Fix hero sections on mobile */
+            section[style*="padding: 3rem"] {
+                padding: 2rem 0 !important;
+            }
+
+            /* Stack hero content */
+            .container[style*="justify-content: space-between"] {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                align-items: flex-start !important;
+            }
+
+            /* Filter buttons wrap */
+            div[style*="display: flex"][style*="gap"] {
+                flex-wrap: wrap !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-logo { font-size: 1.3rem; }
+            .section-title { font-size: 1.3rem; }
+            h1[style*="font-size: 2.5rem"] { font-size: 1.6rem !important; }
+            h1[style*="font-size: 3rem"] { font-size: 1.8rem !important; }
+            h2[style*="font-size: 2rem"] { font-size: 1.4rem !important; }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -249,7 +329,26 @@
             <li><a href="/register/" class="btn-sell">Register</a></li>
         {% endif %}
     </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </button>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="/" onclick="closeMenu()">🏠 Home</a>
+    <a href="/prices/" onclick="closeMenu()">📊 Prices</a>
+    <a href="/predict/" onclick="closeMenu()">🤖 Predict</a>
+    <a href="/weather/" onclick="closeMenu()">🌤️ Weather</a>
+    <a href="/marketplace/" onclick="closeMenu()">🛒 Marketplace</a>
+    {% if user.is_authenticated %}
+        <a href="/sell/" class="btn-sell" onclick="closeMenu()">+ Sell Crop</a>
+        <a href="/logout/" onclick="closeMenu()">🚪 Logout ({{ user.username }})</a>
+    {% else %}
+        <a href="/login/" onclick="closeMenu()">🔑 Login</a>
+        <a href="/register/" class="btn-sell" onclick="closeMenu()">📝 Register</a>
+    {% endif %}
+</div>
 
 {% if messages %}
 <div class="messages container">
@@ -267,6 +366,30 @@
     <p>🌾 <strong>FarmPrice</strong> — Empowering Indian Farmers with Smart Pricing Intelligence</p>
     <p style="margin-top:0.5rem;font-size:0.85rem;">Helping farmers get the best value for their hard work</p>
 </footer>
+
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const hamburger = document.getElementById('hamburger');
+        menu.classList.toggle('open');
+        hamburger.classList.toggle('open');
+    }
+
+    function closeMenu() {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('mobileMenu');
+        const hamburger = document.getElementById('hamburger');
+        if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+            menu.classList.remove('open');
+            hamburger.classList.remove('open');
+        }
+    });
+</script>
 
 {% block extra_js %}{% endblock %}
 </body>
