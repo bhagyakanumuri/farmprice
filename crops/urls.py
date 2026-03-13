@@ -11,4 +11,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('lang/<str:lang_code>/', views.set_language_view, name='set_language'),
 ]

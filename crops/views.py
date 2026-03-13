@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -257,3 +258,11 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('home')
+from django.utils import translation
+
+def set_language_view(request, lang_code):
+    response = redirect(request.META.get('HTTP_REFERER', '/'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code, max_age=365*24*60*60)
+    translation.activate(lang_code)
+    request.session[translation.LANGUAGE_SESSION_KEY] = lang_code
+    return response
