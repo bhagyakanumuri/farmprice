@@ -108,5 +108,7 @@ LOGIN_REDIRECT_URL = '/'
 # Language cookie settings
 LANGUAGE_COOKIE_NAME = 'django_language'
 LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60  # 1 year
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 
