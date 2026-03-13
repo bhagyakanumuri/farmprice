@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hi\n"
+
+msgid "Home"
+msgstr "होम"
+
+msgid "Prices"
+msgstr "कीमतें"
+
+msgid "Predict"
+msgstr "पूर्वानुमान"
+
+msgid "Weather"
+msgstr "मौसम"
+
+msgid "Marketplace"
+msgstr "बाज़ार"
+
+msgid "Sell Crop"
+msgstr "फसल बेचें"
+
+msgid "Logout"
+msgstr "लॉग आउट"
+
+msgid "Login"
+msgstr "लॉग इन"
+
+msgid "Register"
+msgstr "पंजीकरण"
+
+msgid "Empowering Indian Farmers with Smart Pricing Intelligence"
+msgstr "स्मार्ट मूल्य निर्धारण से भारतीय किसानों को सशक्त बनाना"
+
+msgid "Helping farmers get the best value for their hard work"
+msgstr "किसानों को उनकी मेहनत का सर्वोत्तम मूल्य दिलाने में मदद"
+
+msgid "List Your Crop"
+msgstr "अपनी फसल सूचीबद्ध करें"
+
+msgid "Contact on WhatsApp"
+msgstr "WhatsApp पर संपर्क करें"
+
+msgid "Search"
+msgstr "खोजें"
+
+msgid "Available"
+msgstr "उपलब्ध"
+
+msgid "Post Listing"
+msgstr "लिस्टिंग पोस्ट करें"
+
+msgid "Sell Now"
+msgstr "अभी बेचें"
+
+msgid "Hold"
+msgstr "रोकें"
+
+msgid "Monitor"
+msgstr "निगरानी करें"

@@ -1,0 +1,63 @@
+# Telugu translations for FarmPrice
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: te\n"
+
+msgid "Home"
+msgstr "హోమ్"
+
+msgid "Prices"
+msgstr "ధరలు"
+
+msgid "Predict"
+msgstr "అంచనా"
+
+msgid "Weather"
+msgstr "వాతావరణం"
+
+msgid "Marketplace"
+msgstr "మార్కెట్‌ప్లేస్"
+
+msgid "Sell Crop"
+msgstr "పంట అమ్మండి"
+
+msgid "Logout"
+msgstr "లాగ్ అవుట్"
+
+msgid "Login"
+msgstr "లాగిన్"
+
+msgid "Register"
+msgstr "నమోదు చేయండి"
+
+msgid "Empowering Indian Farmers with Smart Pricing Intelligence"
+msgstr "స్మార్ట్ ధర నిర్ణయంతో భారత రైతులను శక్తివంతం చేయడం"
+
+msgid "Helping farmers get the best value for their hard work"
+msgstr "రైతులకు వారి కష్టానికి సరైన విలువ రావడంలో సహాయం"
+
+msgid "List Your Crop"
+msgstr "మీ పంటను జాబితా చేయండి"
+
+msgid "Contact on WhatsApp"
+msgstr "WhatsApp లో సంప్రదించండి"
+
+msgid "Search"
+msgstr "వెతకండి"
+
+msgid "Available"
+msgstr "అందుబాటులో ఉంది"
+
+msgid "Post Listing"
+msgstr "జాబితా పోస్ట్ చేయండి"
+
+msgid "Sell Now"
+msgstr "ఇప్పుడే అమ్మండి"
+
+msgid "Hold"
+msgstr "ఆగండి"
+
+msgid "Monitor"
+msgstr "పర్యవేక్షించండి"
