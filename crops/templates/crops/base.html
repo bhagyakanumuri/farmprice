@@ -1,5 +1,6 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -329,6 +330,11 @@
             <li><a href="/register/" class="btn-sell">Register</a></li>
         {% endif %}
     </ul>
+    <div style="display:flex;align-items:center;gap:0.4rem;margin-right:0.5rem;">
+        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="en"><button type="submit" style="background:{% if LANGUAGE_CODE == 'en' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">EN</button></form>
+        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="hi"><button type="submit" style="background:{% if LANGUAGE_CODE == 'hi' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">हि</button></form>
+        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="te"><button type="submit" style="background:{% if LANGUAGE_CODE == 'te' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">తె</button></form>
+    </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
     </button>
