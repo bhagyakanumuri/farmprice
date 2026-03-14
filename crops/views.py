@@ -260,9 +260,15 @@ def user_logout(request):
     return redirect('home')
 from django.utils import translation
 
-from django.utils import translation
 def set_language_view(request, lang_code):
-    response = redirect(request.META.get('HTTP_REFERER', '/'))
-    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code, max_age=365*24*60*60)
+    from django.utils import translation
     translation.activate(lang_code)
+    request.session['_language'] = lang_code
+    response = redirect(request.META.get('HTTP_REFERER', '/'))
+    response.set_cookie(
+        settings.LANGUAGE_COOKIE_NAME,
+        lang_code,
+        max_age=365*24*60*60,
+        samesite='Lax'
+    )
     return response
