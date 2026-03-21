@@ -21,259 +21,63 @@
             --white: #ffffff;
             --shadow: 0 4px 20px rgba(45, 106, 79, 0.15);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: var(--cream);
-            color: var(--dark);
-            min-height: 100vh;
-        }
-
-        /* NAVBAR */
-        nav {
-            background: var(--dark);
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-            min-height: 60px;
-        }
-
-        .nav-logo {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 1.6rem;
-            color: var(--green-light);
-            text-decoration: none;
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
+        body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--dark); min-height: 100vh; }
+        nav { background: var(--dark); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.3); min-height: 60px; }
+        .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--green-light); text-decoration: none; padding: 1rem 0; display: flex; align-items: center; gap: 0.5rem; }
         .nav-logo span { color: var(--gold); }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #ccc;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--white);
-            background: var(--green);
-        }
-
-        .nav-links .btn-sell {
-            background: var(--gold);
-            color: var(--dark) !important;
-            border-radius: 20px;
-            padding: 0.5rem 1.25rem !important;
-        }
-
+        .nav-links { display: flex; align-items: center; gap: 0.25rem; list-style: none; }
+        .nav-links a { color: #ccc; text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--white); background: var(--green); }
+        .nav-links .btn-sell { background: var(--gold); color: var(--dark) !important; border-radius: 20px; padding: 0.5rem 1.25rem !important; }
         .nav-links .btn-sell:hover { background: #e08c47; }
-
-        /* HAMBURGER */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 0.5rem;
-            background: none;
-            border: none;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: #ccc;
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 0.5rem; background: none; border: none; }
+        .hamburger span { display: block; width: 25px; height: 3px; background: #ccc; border-radius: 3px; transition: all 0.3s; }
         .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        /* MOBILE MENU */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 60px;
-            left: 0;
-            right: 0;
-            background: var(--dark);
-            z-index: 99;
-            padding: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
+        .mobile-menu { display: none; position: fixed; top: 60px; left: 0; right: 0; background: var(--dark); z-index: 99; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4); flex-direction: column; gap: 0.25rem; }
         .mobile-menu.open { display: flex; }
-
-        .mobile-menu a {
-            color: #ccc;
-            text-decoration: none;
-            padding: 0.85rem 1rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.2s;
-            display: block;
-        }
-
+        .mobile-menu a { color: #ccc; text-decoration: none; padding: 0.85rem 1rem; border-radius: 10px; font-weight: 600; font-size: 1rem; transition: all 0.2s; display: block; }
         .mobile-menu a:hover { color: white; background: var(--green); }
-
-        .mobile-menu .btn-sell {
-            background: var(--gold);
-            color: var(--dark) !important;
-            text-align: center;
-            border-radius: 10px;
-            margin-top: 0.5rem;
-        }
-
-        /* MESSAGES */
+        .mobile-menu .btn-sell { background: var(--gold); color: var(--dark) !important; text-align: center; border-radius: 10px; margin-top: 0.5rem; }
         .messages { padding: 1rem 2rem 0; }
-        .alert {
-            padding: 0.75rem 1.25rem;
-            border-radius: 10px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
+        .alert { padding: 0.75rem 1.25rem; border-radius: 10px; margin-bottom: 0.5rem; font-weight: 600; }
         .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* MAIN */
         main { min-height: calc(100vh - 120px); }
-
-        /* FOOTER */
-        footer {
-            background: var(--dark);
-            color: #aaa;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
+        footer { background: var(--dark); color: #aaa; text-align: center; padding: 2rem; margin-top: 4rem; }
         footer strong { color: var(--green-light); }
-
-        /* CARDS */
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid #e8f5e9;
-        }
-
-        /* BUTTONS */
-        .btn {
-            display: inline-block;
-            padding: 0.7rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Nunito', sans-serif;
-        }
-
+        .card { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid #e8f5e9; }
+        .btn { display: inline-block; padding: 0.7rem 1.5rem; border-radius: 10px; font-weight: 700; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif; }
         .btn-primary { background: var(--green); color: white; }
         .btn-primary:hover { background: #1e4d38; transform: translateY(-1px); }
         .btn-gold { background: var(--gold); color: var(--dark); }
         .btn-gold:hover { background: #e08c47; transform: translateY(-1px); }
         .btn-outline { background: transparent; border: 2px solid var(--green); color: var(--green); }
         .btn-outline:hover { background: var(--green); color: white; }
-
-        /* BADGE */
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
         .badge-up { background: #d4edda; color: #155724; }
         .badge-down { background: #f8d7da; color: #721c24; }
         .badge-stable { background: #fff3cd; color: #856404; }
         .badge-green { background: #d4edda; color: #155724; }
         .badge-yellow { background: #fff3cd; color: #856404; }
         .badge-orange { background: #ffe5d0; color: #c35a00; }
-
-        /* SECTION TITLES */
-        .section-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-sub {
-            color: var(--gray);
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-        }
-
-        /* GRID */
+        .section-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem; }
+        .section-sub { color: var(--gray); margin-bottom: 2rem; font-size: 1.05rem; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-
-        /* CONTAINER */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
         .section { padding: 3rem 0; }
-
-        /* TREND */
         .trend-up { color: #28a745; }
         .trend-down { color: #dc3545; }
         .trend-stable { color: #ffc107; }
-
-        /* FORMS */
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--dark); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            color: var(--dark);
-            transition: border-color 0.2s;
-            background: white;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--green);
-        }
-
-        /* MOBILE RESPONSIVE */
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 1rem; color: var(--dark); transition: border-color 0.2s; background: white; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--green); }
+        .lang-btn { color: white; border: 1px solid #444; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.8rem; font-family: 'Nunito', sans-serif; transition: all 0.2s; }
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .nav-links { display: none; }
@@ -283,31 +87,12 @@
             .section-title { font-size: 1.5rem; }
             .card { padding: 1rem; }
             .btn { padding: 0.65rem 1.25rem; font-size: 0.9rem; }
-
-            /* Fix hero sections on mobile */
-            section[style*="padding: 3rem"] {
-                padding: 2rem 0 !important;
-            }
-
-            /* Stack hero content */
-            .container[style*="justify-content: space-between"] {
-                flex-direction: column !important;
-                gap: 1rem !important;
-                align-items: flex-start !important;
-            }
-
-            /* Filter buttons wrap */
-            div[style*="display: flex"][style*="gap"] {
-                flex-wrap: wrap !important;
-            }
         }
-
         @media (max-width: 480px) {
             .nav-logo { font-size: 1.3rem; }
             .section-title { font-size: 1.3rem; }
             h1[style*="font-size: 2.5rem"] { font-size: 1.6rem !important; }
             h1[style*="font-size: 3rem"] { font-size: 1.8rem !important; }
-            h2[style*="font-size: 2rem"] { font-size: 1.4rem !important; }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -317,42 +102,41 @@
 <nav>
     <a href="/" class="nav-logo">🌾 Farm<span>Price</span></a>
     <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/prices/">Prices</a></li>
-        <li><a href="/predict/">Predict</a></li>
-        <li><a href="/weather/">Weather</a></li>
-        <li><a href="/marketplace/">Marketplace</a></li>
+        <li><a href="/" data-i18n="Home">Home</a></li>
+        <li><a href="/prices/" data-i18n="Prices">Prices</a></li>
+        <li><a href="/predict/" data-i18n="Predict">Predict</a></li>
+        <li><a href="/weather/" data-i18n="Weather">Weather</a></li>
+        <li><a href="/marketplace/" data-i18n="Marketplace">Marketplace</a></li>
         {% if user.is_authenticated %}
-            <li><a href="/sell/" class="btn-sell">+ Sell Crop</a></li>
-            <li><a href="/logout/">Logout ({{ user.username }})</a></li>
+            <li><a href="/sell/" class="btn-sell" data-i18n="Sell Crop">+ Sell Crop</a></li>
+            <li><a href="/logout/" data-i18n="Logout">Logout ({{ user.username }})</a></li>
         {% else %}
-            <li><a href="/login/">Login</a></li>
-            <li><a href="/register/" class="btn-sell">Register</a></li>
+            <li><a href="/login/" data-i18n="Login">Login</a></li>
+            <li><a href="/register/" class="btn-sell" data-i18n="Register">Register</a></li>
         {% endif %}
     </ul>
     <div style="display:flex;align-items:center;gap:0.4rem;margin-right:0.5rem;">
-        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="en"><button type="submit" style="background:{% if LANGUAGE_CODE == 'en' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">EN</button></form>
-        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="hi"><button type="submit" style="background:{% if LANGUAGE_CODE == 'hi' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">हि</button></form>
-        <form action="/i18n/setlang/" method="post" style="display:inline;">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><input type="hidden" name="language" value="te"><button type="submit" style="background:{% if LANGUAGE_CODE == 'te' %}#2d6a4f{% else %}transparent{% endif %};color:white;border:1px solid #444;padding:0.3rem 0.6rem;border-radius:6px;cursor:pointer;font-weight:700;font-size:0.8rem;">తె</button></form>
+        <button class="lang-btn" data-lang="en" onclick="switchLang('en')" style="background:#2d6a4f;">EN</button>
+        <button class="lang-btn" data-lang="hi" onclick="switchLang('hi')" style="background:transparent;">हि</button>
+        <button class="lang-btn" data-lang="te" onclick="switchLang('te')" style="background:transparent;">తె</button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
     </button>
 </nav>
 
-<!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
-    <a href="/" onclick="closeMenu()">🏠 Home</a>
-    <a href="/prices/" onclick="closeMenu()">📊 Prices</a>
-    <a href="/predict/" onclick="closeMenu()">🤖 Predict</a>
-    <a href="/weather/" onclick="closeMenu()">🌤️ Weather</a>
-    <a href="/marketplace/" onclick="closeMenu()">🛒 Marketplace</a>
+    <a href="/" onclick="closeMenu()" data-i18n="Home">🏠 Home</a>
+    <a href="/prices/" onclick="closeMenu()" data-i18n="Prices">📊 Prices</a>
+    <a href="/predict/" onclick="closeMenu()" data-i18n="Predict">🤖 Predict</a>
+    <a href="/weather/" onclick="closeMenu()" data-i18n="Weather">🌤️ Weather</a>
+    <a href="/marketplace/" onclick="closeMenu()" data-i18n="Marketplace">🛒 Marketplace</a>
     {% if user.is_authenticated %}
-        <a href="/sell/" class="btn-sell" onclick="closeMenu()">+ Sell Crop</a>
-        <a href="/logout/" onclick="closeMenu()">🚪 Logout ({{ user.username }})</a>
+        <a href="/sell/" class="btn-sell" onclick="closeMenu()" data-i18n="Sell Crop">+ Sell Crop</a>
+        <a href="/logout/" onclick="closeMenu()" data-i18n="Logout">🚪 Logout ({{ user.username }})</a>
     {% else %}
-        <a href="/login/" onclick="closeMenu()">🔑 Login</a>
-        <a href="/register/" class="btn-sell" onclick="closeMenu()">📝 Register</a>
+        <a href="/login/" onclick="closeMenu()" data-i18n="Login">🔑 Login</a>
+        <a href="/register/" class="btn-sell" onclick="closeMenu()" data-i18n="Register">📝 Register</a>
     {% endif %}
 </div>
 
@@ -369,32 +153,80 @@
 </main>
 
 <footer>
-    <p>🌾 <strong>FarmPrice</strong> — Empowering Indian Farmers with Smart Pricing Intelligence</p>
-    <p style="margin-top:0.5rem;font-size:0.85rem;">Helping farmers get the best value for their hard work</p>
+    <p>🌾 <strong>FarmPrice</strong> — <span data-i18n="tagline">Empowering Indian Farmers with Smart Pricing Intelligence</span></p>
+    <p style="margin-top:0.5rem;font-size:0.85rem;"><span data-i18n="tagline2">Helping farmers get the best value for their hard work</span></p>
 </footer>
 
 <script>
-    function toggleMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const hamburger = document.getElementById('hamburger');
-        menu.classList.toggle('open');
-        hamburger.classList.toggle('open');
+const translations = {
+    en: {
+        'Home': 'Home', 'Prices': 'Prices', 'Predict': 'Predict',
+        'Weather': 'Weather', 'Marketplace': 'Marketplace',
+        'Login': 'Login', 'Register': 'Register',
+        'Logout': 'Logout', 'Sell Crop': '+ Sell Crop',
+        'tagline': 'Empowering Indian Farmers with Smart Pricing Intelligence',
+        'tagline2': 'Helping farmers get the best value for their hard work',
+    },
+    hi: {
+        'Home': 'होम', 'Prices': 'कीमतें', 'Predict': 'पूर्वानुमान',
+        'Weather': 'मौसम', 'Marketplace': 'बाज़ार',
+        'Login': 'लॉग इन', 'Register': 'पंजीकरण',
+        'Logout': 'लॉग आउट', 'Sell Crop': '+ फसल बेचें',
+        'tagline': 'स्मार्ट मूल्य निर्धारण से भारतीय किसानों को सशक्त बनाना',
+        'tagline2': 'किसानों को उनकी मेहनत का सर्वोत्तम मूल्य दिलाने में मदद',
+    },
+    te: {
+        'Home': 'హోమ్', 'Prices': 'ధరలు', 'Predict': 'అంచనా',
+        'Weather': 'వాతావరణం', 'Marketplace': 'మార్కెట్‌ప్లేస్',
+        'Login': 'లాగిన్', 'Register': 'నమోదు చేయండి',
+        'Logout': 'లాగ్ అవుట్', 'Sell Crop': '+ పంట అమ్మండి',
+        'tagline': 'స్మార్ట్ ధర నిర్ణయంతో భారత రైతులను శక్తివంతం చేయడం',
+        'tagline2': 'రైతులకు వారి కష్టానికి సరైన విలువ రావడంలో సహాయం',
     }
+};
 
-    function closeMenu() {
-        document.getElementById('mobileMenu').classList.remove('open');
-        document.getElementById('hamburger').classList.remove('open');
-    }
-
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-        const menu = document.getElementById('mobileMenu');
-        const hamburger = document.getElementById('hamburger');
-        if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
-            menu.classList.remove('open');
-            hamburger.classList.remove('open');
-        }
+function applyLanguage(lang) {
+    const dict = translations[lang];
+    if (!dict) return;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
     });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.style.background = btn.dataset.lang === lang ? '#2d6a4f' : 'transparent';
+    });
+}
+
+function switchLang(lang) {
+    localStorage.setItem('farmprice_lang', lang);
+    applyLanguage(lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('farmprice_lang') || 'en';
+    applyLanguage(saved);
+});
+</script>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    hamburger.classList.toggle('open');
+}
+function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+}
+document.addEventListener('click', function(e) {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+        menu.classList.remove('open');
+        hamburger.classList.remove('open');
+    }
+});
 </script>
 
 {% block extra_js %}{% endblock %}
