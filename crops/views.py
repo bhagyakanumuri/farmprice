@@ -10,6 +10,12 @@ import json
 from datetime import date, timedelta
 
 
+def landing(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    return render(request, 'crops/landing.html')
+
+@login_required
 def home(request):
     home_crops = ['wheat', 'rice', 'tomato', 'onion']
     live_prices = []
