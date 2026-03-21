@@ -1,33 +1,329 @@
-{% extends 'crops/base.html' %}
-{% block title %}Login - FarmPrice{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FarmPrice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1b2b1e 0%, #2d6a4f 50%, #52b788 100%);
+            display: flex;
+            flex-direction: column;
+        }
 
-{% block content %}
-<section style="min-height: 80vh; display: flex; align-items: center; background: linear-gradient(135deg, #f8fffe, #e8f5e9);">
-    <div class="container" style="max-width: 450px;">
-        <div class="card" style="padding: 2.5rem;">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="font-size: 3rem; margin-bottom: 0.5rem;">🌾</div>
-                <h1 style="font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800;">Welcome Back</h1>
-                <p style="color: #6c757d;">Sign in to your FarmPrice account</p>
+        /* Background farmer image overlay */
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80') center/cover no-repeat;
+            z-index: 0;
+        }
+        .bg-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(27,43,30,0.75) 0%, rgba(45,106,79,0.65) 100%);
+        }
+
+        /* Language switcher top */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: white;
+            text-decoration: none;
+        }
+        .logo span { color: #f4a261; }
+
+        .lang-switcher {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 25px;
+            padding: 0.4rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: white; color: #2d6a4f; }
+        .lang-sep { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+
+        /* Main layout */
+        .page-wrapper {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 5rem 4rem 2rem;
+        }
+
+        /* Login card */
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .card-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .card-logo-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #2d6a4f, #52b788);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 2rem;
+        }
+        .card-logo h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1b2b1e;
+        }
+        .card-logo p {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            color: #1b2b1e;
+            transition: border-color 0.2s;
+            background: #f8fffe;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #2d6a4f;
+            background: white;
+        }
+        .input-group input::placeholder { color: #aaa; }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, #2d6a4f, #52b788);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(45,106,79,0.4);
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(45,106,79,0.5); }
+
+        .card-links {
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .card-links a { color: #2d6a4f; font-weight: 700; text-decoration: none; }
+        .card-links a:hover { text-decoration: underline; }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.25rem 0;
+            color: #ccc;
+            font-size: 0.85rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                justify-content: center;
+                padding: 5rem 1rem 2rem;
+            }
+            .login-card { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-overlay"></div>
+
+<!-- Top bar -->
+<div class="top-bar">
+    <a href="/" class="logo">🌾 Farm<span>Price</span></a>
+    <div class="lang-switcher">
+        <span style="color:rgba(255,255,255,0.7);font-size:0.9rem;">🌐</span>
+        <button class="lang-btn active" data-lang="en" onclick="switchLang('en')" data-i18n-btn="EN">EN</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" data-lang="hi" onclick="switchLang('hi')">हिंदी</button>
+        <span class="lang-sep">|</span>
+        <button class="lang-btn" data-lang="te" onclick="switchLang('te')">తెలుగు</button>
+    </div>
+</div>
+
+<!-- Page -->
+<div class="page-wrapper">
+    <div class="login-card">
+        <div class="card-logo">
+            <div class="card-logo-icon">🌾</div>
+            <h2 data-i18n="welcome_back">Welcome Back!</h2>
+            <p data-i18n="login_sub">Login to access your farm dashboard</p>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert-error">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-icon">👤</span>
+                <input type="text" name="username" placeholder="Username / Farmer ID" required data-i18n-placeholder="username_placeholder">
             </div>
-            
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required placeholder="Your username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required placeholder="Your password">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Login →</button>
-            </form>
-            
-            <div style="text-align: center; margin-top: 1.5rem; color: #6c757d;">
-                Don't have an account? <a href="/register/" style="color: #2d6a4f; font-weight: 700;">Register Free</a>
+            <div class="input-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" name="password" placeholder="Password" required data-i18n-placeholder="password_placeholder">
             </div>
+            <button type="submit" class="btn-login" data-i18n="login_btn">Log In</button>
+        </form>
+
+        <div class="divider" data-i18n="or_divider">or</div>
+
+        <div class="card-links">
+            <span data-i18n="new_user">New farmer?</span> <a href="/register/" data-i18n="register_link">Register here</a>
         </div>
     </div>
-</section>
-{% endblock %}
+</div>
+
+<script>
+const translations = {
+    en: {
+        'welcome_back': 'Welcome Back!',
+        'login_sub': 'Login to access your farm dashboard',
+        'login_btn': 'Log In',
+        'or_divider': 'or',
+        'new_user': 'New farmer?',
+        'register_link': 'Register here',
+        'username_placeholder': 'Username / Farmer ID',
+        'password_placeholder': 'Password',
+    },
+    hi: {
+        'welcome_back': 'वापसी पर स्वागत है!',
+        'login_sub': 'अपने फार्म डैशबोर्ड तक पहुंचें',
+        'login_btn': 'लॉग इन करें',
+        'or_divider': 'या',
+        'new_user': 'नए किसान?',
+        'register_link': 'यहाँ पंजीकरण करें',
+        'username_placeholder': 'उपयोगकर्ता नाम / किसान ID',
+        'password_placeholder': 'पासवर्ड',
+    },
+    te: {
+        'welcome_back': 'తిరిగి స్వాగతం!',
+        'login_sub': 'మీ ఫార్మ్ డాష్‌బోర్డ్ యాక్సెస్ చేయండి',
+        'login_btn': 'లాగిన్ చేయండి',
+        'or_divider': 'లేదా',
+        'new_user': 'కొత్త రైతు?',
+        'register_link': 'ఇక్కడ నమోదు చేయండి',
+        'username_placeholder': 'వినియోగదారు పేరు / రైతు ID',
+        'password_placeholder': 'పాస్‌వర్డ్',
+    }
+};
+
+function applyLanguage(lang) {
+    const dict = translations[lang];
+    if (!dict) return;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) el.placeholder = dict[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+}
+
+function switchLang(lang) {
+    localStorage.setItem('farmprice_lang', lang);
+    applyLanguage(lang);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('farmprice_lang') || 'en';
+    applyLanguage(saved);
+});
+</script>
+</body>
+</html>
