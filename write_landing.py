@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+content = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -146,4 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-</html>
+</html>"""
+
+with open('crops/templates/crops/landing.html', 'w', encoding='utf-8') as f:
+    f.write(content)
+print('Done!')
