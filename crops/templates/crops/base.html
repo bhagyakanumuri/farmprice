@@ -337,12 +337,12 @@ function applyLanguage(lang) {
         const key = el.getAttribute('data-i18n');
         if (dict[key]) el.textContent = dict[key];
     });
-    document.querySelectorAll('*').forEach(el => {
-        if (el.children.length === 0 && el.textContent.trim()) {
-            const text = el.textContent.trim();
-            if (dict[text]) el.textContent = dict[text];
-        }
-    });
+   document.querySelectorAll('h1, h2, h3, h4, p, span, label, button, a, th, td, div').forEach(el => {
+    if (el.children.length === 0 && el.textContent.trim()) {
+        const text = el.textContent.trim();
+        if (dict[text]) el.textContent = dict[text];
+    }
+});
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.style.background = btn.dataset.lang === lang ? '#2d6a4f' : 'transparent';
     });
