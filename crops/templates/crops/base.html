@@ -77,7 +77,15 @@
         .form-group label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--dark); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 1rem; color: var(--dark); transition: border-color 0.2s; background: white; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--green); }
-        .lang-btn { color: white; border: 1px solid #444; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.8rem; font-family: 'Nunito', sans-serif; transition: all 0.2s; }
+        .lang-btn { color: white; border: 1px solid #555; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.8rem; font-family: 'Nunito', sans-serif; transition: all 0.2s; background: transparent; }
+        .lang-btn.active { background: #2d6a4f !important; border-color: #2d6a4f; }
+
+        /* Hide Google Translate toolbar */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+        .goog-te-gadget { display: none !important; }
+        #google_translate_element { display: none !important; }
+
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .nav-links { display: none; }
@@ -95,30 +103,47 @@
             h1[style*="font-size: 3rem"] { font-size: 1.8rem !important; }
         }
     </style>
+
+    <!-- Google Translate -->
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'te,hi,en',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
 
+<!-- Hidden Google Translate element -->
+<div id="google_translate_element" style="display:none;"></div>
+
 <nav>
     <a href="/" class="nav-logo">🌾 Farm<span>Price</span></a>
     <ul class="nav-links">
-        <li><a href="/" data-i18n="Home">Home</a></li>
-        <li><a href="/prices/" data-i18n="Prices">Prices</a></li>
-        <li><a href="/predict/" data-i18n="Predict">Predict</a></li>
-        <li><a href="/weather/" data-i18n="Weather">Weather</a></li>
-        <li><a href="/marketplace/" data-i18n="Marketplace">Marketplace</a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/prices/">Prices</a></li>
+        <li><a href="/predict/">Predict</a></li>
+        <li><a href="/weather/">Weather</a></li>
+        <li><a href="/marketplace/">Marketplace</a></li>
         {% if user.is_authenticated %}
-            <li><a href="/sell/" class="btn-sell" data-i18n="Sell Crop">+ Sell Crop</a></li>
-            <li><a href="/logout/" data-i18n="Logout">Logout ({{ user.username }})</a></li>
+            <li><a href="/sell/" class="btn-sell">+ Sell Crop</a></li>
+            <li><a href="/logout/">Logout ({{ user.username }})</a></li>
         {% else %}
-            <li><a href="/login/" data-i18n="Login">Login</a></li>
-            <li><a href="/register/" class="btn-sell" data-i18n="Register">Register</a></li>
+            <li><a href="/login/">Login</a></li>
+            <li><a href="/register/" class="btn-sell">Register</a></li>
         {% endif %}
     </ul>
+    <!-- Language Switcher -->
     <div style="display:flex;align-items:center;gap:0.4rem;margin-right:0.5rem;">
-        <button class="lang-btn" data-lang="en" onclick="switchLang('en')" style="background:#2d6a4f;">EN</button>
-        <button class="lang-btn" data-lang="hi" onclick="switchLang('hi')" style="background:transparent;">हि</button>
-        <button class="lang-btn" data-lang="te" onclick="switchLang('te')" style="background:transparent;">తె</button>
+        <button class="lang-btn active" id="btn-en" onclick="translateTo('en')">EN</button>
+        <button class="lang-btn" id="btn-hi" onclick="translateTo('hi')">हि</button>
+        <button class="lang-btn" id="btn-te" onclick="translateTo('te')">తె</button>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
@@ -126,18 +151,24 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-    <a href="/" onclick="closeMenu()" data-i18n="Home">🏠 Home</a>
-    <a href="/prices/" onclick="closeMenu()" data-i18n="Prices">📊 Prices</a>
-    <a href="/predict/" onclick="closeMenu()" data-i18n="Predict">🤖 Predict</a>
-    <a href="/weather/" onclick="closeMenu()" data-i18n="Weather">🌤️ Weather</a>
-    <a href="/marketplace/" onclick="closeMenu()" data-i18n="Marketplace">🛒 Marketplace</a>
+    <a href="/" onclick="closeMenu()">🏠 Home</a>
+    <a href="/prices/" onclick="closeMenu()">📊 Prices</a>
+    <a href="/predict/" onclick="closeMenu()">🤖 Predict</a>
+    <a href="/weather/" onclick="closeMenu()">🌤️ Weather</a>
+    <a href="/marketplace/" onclick="closeMenu()">🛒 Marketplace</a>
     {% if user.is_authenticated %}
-        <a href="/sell/" class="btn-sell" onclick="closeMenu()" data-i18n="Sell Crop">+ Sell Crop</a>
-        <a href="/logout/" onclick="closeMenu()" data-i18n="Logout">🚪 Logout ({{ user.username }})</a>
+        <a href="/sell/" class="btn-sell" onclick="closeMenu()">+ Sell Crop</a>
+        <a href="/logout/" onclick="closeMenu()">🚪 Logout ({{ user.username }})</a>
     {% else %}
-        <a href="/login/" onclick="closeMenu()" data-i18n="Login">🔑 Login</a>
-        <a href="/register/" class="btn-sell" onclick="closeMenu()" data-i18n="Register">📝 Register</a>
+        <a href="/login/" onclick="closeMenu()">🔑 Login</a>
+        <a href="/register/" class="btn-sell" onclick="closeMenu()">📝 Register</a>
     {% endif %}
+    <!-- Mobile language switcher -->
+    <div style="display:flex;gap:0.4rem;padding:0.75rem 0.5rem 0.25rem;">
+        <button class="lang-btn" onclick="translateTo('en');closeMenu();" style="flex:1;background:#2d6a4f;">EN</button>
+        <button class="lang-btn" onclick="translateTo('hi');closeMenu();" style="flex:1;">हि</button>
+        <button class="lang-btn" onclick="translateTo('te');closeMenu();" style="flex:1;">తె</button>
+    </div>
 </div>
 
 {% if messages %}
@@ -153,72 +184,70 @@
 </main>
 
 <footer>
-    <p>🌾 <strong>FarmPrice</strong> — <span data-i18n="tagline">Empowering Indian Farmers with Smart Pricing Intelligence</span></p>
-    <p style="margin-top:0.5rem;font-size:0.85rem;"><span data-i18n="tagline2">Helping farmers get the best value for their hard work</span></p>
+    <p>🌾 <strong>FarmPrice</strong> — Empowering Indian Farmers with Smart Pricing Intelligence</p>
+    <p style="margin-top:0.5rem;font-size:0.85rem;">Helping farmers get the best value for their hard work</p>
 </footer>
 
 <script>
-const translations = {
-    en: {
-        'Home': 'Home', 'Prices': 'Prices', 'Predict': 'Predict',
-        'Weather': 'Weather', 'Marketplace': 'Marketplace',
-        'Login': 'Login', 'Register': 'Register',
-        'Logout': 'Logout', 'Sell Crop': '+ Sell Crop',
-        'tagline': 'Empowering Indian Farmers with Smart Pricing Intelligence',
-        'tagline2': 'Helping farmers get the best value for their hard work',
-    },
-    hi: {
-        'Home': 'होम', 'Prices': 'कीमतें', 'Predict': 'पूर्वानुमान',
-        'Weather': 'मौसम', 'Marketplace': 'बाज़ार',
-        'Login': 'लॉग इन', 'Register': 'पंजीकरण',
-        'Logout': 'लॉग आउट', 'Sell Crop': '+ फसल बेचें',
-        'tagline': 'स्मार्ट मूल्य निर्धारण से भारतीय किसानों को सशक्त बनाना',
-        'tagline2': 'किसानों को उनकी मेहनत का सर्वोत्तम मूल्य दिलाने में मदद',
-    },
-    te: {
-        'Home': 'హోమ్', 'Prices': 'ధరలు', 'Predict': 'అంచనా',
-        'Weather': 'వాతావరణం', 'Marketplace': 'మార్కెట్‌ప్లేస్',
-        'Login': 'లాగిన్', 'Register': 'నమోదు చేయండి',
-        'Logout': 'లాగ్ అవుట్', 'Sell Crop': '+ పంట అమ్మండి',
-        'tagline': 'స్మార్ట్ ధర నిర్ణయంతో భారత రైతులను శక్తివంతం చేయడం',
-        'tagline2': 'రైతులకు వారి కష్టానికి సరైన విలువ రావడంలో సహాయం',
-    }
-};
-
-function applyLanguage(lang) {
-    const dict = translations[lang];
-    if (!dict) return;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict[key]) el.textContent = dict[key];
-    });
+function translateTo(lang) {
+    // Update button styles
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.style.background = btn.dataset.lang === lang ? '#2d6a4f' : 'transparent';
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
     });
-}
+    const activeBtn = document.getElementById('btn-' + lang);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = '#2d6a4f';
+    }
 
-function switchLang(lang) {
+    // Save preference
     localStorage.setItem('farmprice_lang', lang);
-    applyLanguage(lang);
+
+    if (lang === 'en') {
+        // Clear translation cookies and reload
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+        window.location.reload();
+        return;
+    }
+
+    // Set Google Translate cookie
+    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `googtrans=/en/${lang}; expires=${expires}; path=/`;
+    document.cookie = `googtrans=/en/${lang}; expires=${expires}; path=/; domain=.${window.location.hostname}`;
+    document.cookie = `googtrans=/en/${lang}; expires=${expires}; path=/; domain=${window.location.hostname}`;
+    window.location.reload();
 }
 
+// Apply saved language on page load
 document.addEventListener('DOMContentLoaded', function() {
     const saved = localStorage.getItem('farmprice_lang') || 'en';
-    applyLanguage(saved);
-});
-</script>
 
-<script>
+    // Update button UI
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = 'transparent';
+    });
+    const activeBtn = document.getElementById('btn-' + saved);
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.style.background = '#2d6a4f';
+    }
+});
+
 function toggleMenu() {
     const menu = document.getElementById('mobileMenu');
     const hamburger = document.getElementById('hamburger');
     menu.classList.toggle('open');
     hamburger.classList.toggle('open');
 }
+
 function closeMenu() {
     document.getElementById('mobileMenu').classList.remove('open');
     document.getElementById('hamburger').classList.remove('open');
 }
+
 document.addEventListener('click', function(e) {
     const menu = document.getElementById('mobileMenu');
     const hamburger = document.getElementById('hamburger');
@@ -230,128 +259,5 @@ document.addEventListener('click', function(e) {
 </script>
 
 {% block extra_js %}{% endblock %}
-<script>
-const siteTranslations = {
-    te: {
-        'Home': 'హోమ్', 'Prices': 'ధరలు', 'Predict': 'అంచనా',
-        'Weather': 'వాతావరణం', 'Marketplace': 'మార్కెట్‌ప్లేస్',
-        'Login': 'లాగిన్', 'Register': 'నమోదు చేయండి',
-        'Logout': 'లాగ్ అవుట్', 'Sell Crop': 'పంట అమ్మండి',
-        'Username': 'వినియోగదారు పేరు', 'Email': 'ఇమెయిల్', 'Password': 'పాస్‌వర్డ్',
-        'Join FarmPrice': 'FarmPrice లో చేరండి',
-        'Create your free farmer account today': 'ఈరోజే మీ ఉచిత రైతు ఖాతా సృష్టించండి',
-        'Create Account →': 'ఖాతా సృష్టించండి →',
-        'Already have an account?': 'ఇప్పటికే ఖాతా ఉందా?',
-        'Welcome Back!': 'తిరిగి స్వాగతం!',
-        'Log In': 'లాగిన్ చేయండి',
-        'New farmer?': 'కొత్త రైతు?',
-        'Register here': 'ఇక్కడ నమోదు చేయండి',
-        'Live Mandi Prices': 'లైవ్ మండి ధరలు',
-        'Contact on WhatsApp': 'WhatsApp లో సంప్రదించండి',
-        'Available': 'అందుబాటులో ఉంది',
-        'Search': 'వెతకండి', 'Filter by Crop': 'పంట ద్వారా వడపోత',
-        'Post Listing': 'జాబితా పోస్ట్ చేయండి',
-        'Sell Now': 'ఇప్పుడే అమ్మండి', 'Hold': 'ఆగండి', 'Monitor': 'పర్యవేక్షించండి',
-        'List Your Crop': 'మీ పంటను జాబితా చేయండి',
-        'Empowering Indian Farmers with Smart Pricing Intelligence': 'స్మార్ట్ ధర నిర్ణయంతో భారత రైతులను శక్తివంతం చేయడం',
-        'Helping farmers get the best value for their hard work': 'రైతులకు వారి కష్టానికి సరైన విలువ రావడంలో సహాయం',
-        'Live Crop Prices': 'లైవ్ పంట ధరలు',
-'Real-time mandi prices from across India': 'భారతదేశం అంతటా నుండి రియల్-టైమ్ మండి ధరలు',
-'Price Prediction': 'ధర అంచనా',
-'AI-powered 15-day price forecasts to help you decide when to sell': 'అమ్మే సమయం నిర్ణయించుకోవడానికి AI ఆధారిత 15-రోజుల ధర అంచనాలు',
-'Weather-Based Advice': 'వాతావరణ-ఆధారిత సలహా',
-'Marketplace': 'మార్కెట్‌ప్లేస్',
-'List Your Crop': 'మీ పంటను జాబితా చేయండి',
-'Crop Listing Details': 'పంట జాబితా వివరాలు',
-'Know When to': 'ఎప్పుడు అమ్మాలో తెలుసుకోండి',
-'Sell Your Crops': 'మీ పంటలు అమ్మండి',
-'for Maximum Profit': 'గరిష్ట లాభం కోసం',
-'Smart Farming for Better Profits': 'మెరుగైన లాభాల కోసం స్మార్ట్ వ్యవసాయం',
-'Filter by State': 'రాష్ట్రం ద్వారా వడపోత',
-'Select Crop': 'పంట ఎంచుకోండి',
-'RECOMMENDATION': 'సిఫార్సు',
-'Expected Price': 'అంచనా ధర',
-'Your Location': 'మీ స్థానం',
-'Crop-Specific Advice': 'పంట-నిర్దిష్ట సలహా',
-'Filter by Crop': 'పంట ద్వారా వడపోత',
-'No listings yet': 'జాబితాలు ఏమీ లేవు',
-'Be the first to list your crop!': 'మొదట మీ పంటను జాబితా చేయండి!',
-'Crop Type': 'పంట రకం', 'Quantity (Quintals)': 'పరిమాణం (క్వింటాళ్ళు)',
-'Asking Price': 'అడిగే ధర', 'Location': 'స్థానం',
-'WhatsApp Number': 'WhatsApp నంబర్',
-'Buyers will contact you via WhatsApp': 'కొనుగోలుదారులు WhatsApp ద్వారా సంప్రదిస్తారు',
-    },
-    hi: {
-        'Home': 'होम', 'Prices': 'कीमतें', 'Predict': 'पूर्वानुमान',
-        'Weather': 'मौसम', 'Marketplace': 'बाज़ार',
-        'Login': 'लॉग इन', 'Register': 'पंजीकरण',
-        'Logout': 'लॉग आउट', 'Sell Crop': 'फसल बेचें',
-        'Username': 'उपयोगकर्ता नाम', 'Email': 'ईमेल', 'Password': 'पासवर्ड',
-        'Join FarmPrice': 'FarmPrice से जुड़ें',
-        'Create your free farmer account today': 'आज अपना मुफ्त किसान खाता बनाएं',
-        'Create Account →': 'खाता बनाएं →',
-        'Already have an account?': 'पहले से खाता है?',
-        'Welcome Back!': 'वापसी पर स्वागत है!',
-        'Log In': 'लॉग इन करें',
-        'New farmer?': 'नए किसान?',
-        'Register here': 'यहाँ पंजीकरण करें',
-        'Live Mandi Prices': 'लाइव मंडी भाव',
-        'Contact on WhatsApp': 'WhatsApp पर संपर्क करें',
-        'Available': 'उपलब्ध',
-        'Search': 'खोजें', 'Filter by Crop': 'फसल से फ़िल्टर करें',
-        'Post Listing': 'लिस्टिंग पोस्ट करें',
-        'Sell Now': 'अभी बेचें', 'Hold': 'रोकें', 'Monitor': 'निगरानी करें',
-        'List Your Crop': 'अपनी फसल सूचीबद्ध करें',
-        'Empowering Indian Farmers with Smart Pricing Intelligence': 'स्मार्ट मूल्य निर्धारण से भारतीय किसानों को सशक्त बनाना',
-        'Helping farmers get the best value for their hard work': 'किसानों को उनकी मेहनत का सर्वोत्तम मूल्य दिलाने में मदद',
-        'Live Crop Prices': 'लाइव फसल कीमतें',
-'Real-time mandi prices from across India': 'पूरे भारत से रियल-टाइम मंडी कीमतें',
-'Price Prediction': 'मूल्य पूर्वानुमान',
-'Weather-Based Advice': 'मौसम-आधारित सलाह',
-'Marketplace': 'बाज़ार',
-'List Your Crop': 'अपनी फसल सूचीबद्ध करें',
-'Crop Listing Details': 'फसल सूची विवरण',
-'Know When to': 'जानें कब बेचें',
-'Sell Your Crops': 'अपनी फसल बेचें',
-'for Maximum Profit': 'अधिकतम लाभ के लिए',
-'Smart Farming for Better Profits': 'बेहतर मुनाफे के लिए स्मार्ट खेती',
-'Filter by State': 'राज्य से फ़िल्टर करें',
-'Select Crop': 'फसल चुनें',
-'RECOMMENDATION': 'सिफारिश',
-'Expected Price': 'अनुमानित कीमत',
-'Your Location': 'आपका स्थान',
-'Crop-Specific Advice': 'फसल-विशिष्ट सलाह',
-'No listings yet': 'अभी कोई सूची नहीं',
-'Be the first to list your crop!': 'पहले अपनी फसल सूचीबद्ध करें!',
-'Crop Type': 'फसल का प्रकार', 'Quantity (Quintals)': 'मात्रा (क्विंटल)',
-'Asking Price': 'मांग मूल्य', 'Location': 'स्थान',
-'WhatsApp Number': 'WhatsApp नंबर',
-'Buyers will contact you via WhatsApp': 'खरीदार WhatsApp के माध्यम से संपर्क करेंगे',
-    }
-};
-
-function applyLanguage(lang) {
-    const dict = siteTranslations[lang];
-    if (!dict) return;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict[key]) el.textContent = dict[key];
-    });
-   document.querySelectorAll('h1, h2, h3, h4, p, span, label, button, a, th, td, div').forEach(el => {
-    if (el.children.length === 0 && el.textContent.trim()) {
-        const text = el.textContent.trim();
-        if (dict[text]) el.textContent = dict[text];
-    }
-});
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.style.background = btn.dataset.lang === lang ? '#2d6a4f' : 'transparent';
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const saved = localStorage.getItem('farmprice_lang') || 'en';
-    if (saved !== 'en') applyLanguage(saved);
-});
-</script>
 </body>
 </html>
