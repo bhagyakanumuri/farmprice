@@ -230,5 +230,80 @@ document.addEventListener('click', function(e) {
 </script>
 
 {% block extra_js %}{% endblock %}
+<script>
+const siteTranslations = {
+    te: {
+        'Home': 'హోమ్', 'Prices': 'ధరలు', 'Predict': 'అంచనా',
+        'Weather': 'వాతావరణం', 'Marketplace': 'మార్కెట్‌ప్లేస్',
+        'Login': 'లాగిన్', 'Register': 'నమోదు చేయండి',
+        'Logout': 'లాగ్ అవుట్', 'Sell Crop': 'పంట అమ్మండి',
+        'Username': 'వినియోగదారు పేరు', 'Email': 'ఇమెయిల్', 'Password': 'పాస్‌వర్డ్',
+        'Join FarmPrice': 'FarmPrice లో చేరండి',
+        'Create your free farmer account today': 'ఈరోజే మీ ఉచిత రైతు ఖాతా సృష్టించండి',
+        'Create Account →': 'ఖాతా సృష్టించండి →',
+        'Already have an account?': 'ఇప్పటికే ఖాతా ఉందా?',
+        'Welcome Back!': 'తిరిగి స్వాగతం!',
+        'Log In': 'లాగిన్ చేయండి',
+        'New farmer?': 'కొత్త రైతు?',
+        'Register here': 'ఇక్కడ నమోదు చేయండి',
+        'Live Mandi Prices': 'లైవ్ మండి ధరలు',
+        'Contact on WhatsApp': 'WhatsApp లో సంప్రదించండి',
+        'Available': 'అందుబాటులో ఉంది',
+        'Search': 'వెతకండి', 'Filter by Crop': 'పంట ద్వారా వడపోత',
+        'Post Listing': 'జాబితా పోస్ట్ చేయండి',
+        'Sell Now': 'ఇప్పుడే అమ్మండి', 'Hold': 'ఆగండి', 'Monitor': 'పర్యవేక్షించండి',
+        'List Your Crop': 'మీ పంటను జాబితా చేయండి',
+        'Empowering Indian Farmers with Smart Pricing Intelligence': 'స్మార్ట్ ధర నిర్ణయంతో భారత రైతులను శక్తివంతం చేయడం',
+        'Helping farmers get the best value for their hard work': 'రైతులకు వారి కష్టానికి సరైన విలువ రావడంలో సహాయం',
+    },
+    hi: {
+        'Home': 'होम', 'Prices': 'कीमतें', 'Predict': 'पूर्वानुमान',
+        'Weather': 'मौसम', 'Marketplace': 'बाज़ार',
+        'Login': 'लॉग इन', 'Register': 'पंजीकरण',
+        'Logout': 'लॉग आउट', 'Sell Crop': 'फसल बेचें',
+        'Username': 'उपयोगकर्ता नाम', 'Email': 'ईमेल', 'Password': 'पासवर्ड',
+        'Join FarmPrice': 'FarmPrice से जुड़ें',
+        'Create your free farmer account today': 'आज अपना मुफ्त किसान खाता बनाएं',
+        'Create Account →': 'खाता बनाएं →',
+        'Already have an account?': 'पहले से खाता है?',
+        'Welcome Back!': 'वापसी पर स्वागत है!',
+        'Log In': 'लॉग इन करें',
+        'New farmer?': 'नए किसान?',
+        'Register here': 'यहाँ पंजीकरण करें',
+        'Live Mandi Prices': 'लाइव मंडी भाव',
+        'Contact on WhatsApp': 'WhatsApp पर संपर्क करें',
+        'Available': 'उपलब्ध',
+        'Search': 'खोजें', 'Filter by Crop': 'फसल से फ़िल्टर करें',
+        'Post Listing': 'लिस्टिंग पोस्ट करें',
+        'Sell Now': 'अभी बेचें', 'Hold': 'रोकें', 'Monitor': 'निगरानी करें',
+        'List Your Crop': 'अपनी फसल सूचीबद्ध करें',
+        'Empowering Indian Farmers with Smart Pricing Intelligence': 'स्मार्ट मूल्य निर्धारण से भारतीय किसानों को सशक्त बनाना',
+        'Helping farmers get the best value for their hard work': 'किसानों को उनकी मेहनत का सर्वोत्तम मूल्य दिलाने में मदद',
+    }
+};
+
+function applyLanguage(lang) {
+    const dict = siteTranslations[lang];
+    if (!dict) return;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('*').forEach(el => {
+        if (el.children.length === 0 && el.textContent.trim()) {
+            const text = el.textContent.trim();
+            if (dict[text]) el.textContent = dict[text];
+        }
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.style.background = btn.dataset.lang === lang ? '#2d6a4f' : 'transparent';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = localStorage.getItem('farmprice_lang') || 'en';
+    if (saved !== 'en') applyLanguage(saved);
+});
+</script>
 </body>
 </html>
