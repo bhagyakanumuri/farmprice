@@ -16,19 +16,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'crops',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'crops.middleware.LanguageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'crops.middleware.LanguageMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'farmprice.urls'
@@ -104,8 +110,8 @@ STATICFILES_DIRS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_REDIRECT_URL = '/home/'
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
 # Language cookie settings
 LANGUAGE_COOKIE_NAME = 'django_language'
 LANGUAGE_COOKIE_AGE = 365 * 24 * 60 * 60  # 1 year
@@ -114,5 +120,23 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 LANGUAGE_COOKIE_HTTPONLY = False
 LANGUAGE_COOKIE_SAMESITE = 'Lax'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'APP': {
+            'client_id': '193020717924-m8dtocdsgqbrguo91rntjvprkap2m9no.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+LOGIN_REDIRECT_URL = '/home/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 
